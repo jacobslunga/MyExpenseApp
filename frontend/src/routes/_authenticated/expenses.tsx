@@ -12,6 +12,15 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 
+function formatHumanFriendlyDate(isoDate: string): string {
+  const date = new Date(isoDate);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
 export const Route = createFileRoute("/_authenticated/expenses")({
   component: Expenses,
 });
@@ -44,11 +53,12 @@ function Expenses() {
             <TableHead className="w-[100px]">ID</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Amount</TableHead>
+            <TableHead>Date</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {isPending
-            ? Array(3)
+            ? Array(4)
                 .fill(0)
                 .map((_, i) => (
                   <TableRow key={i}>
@@ -68,6 +78,7 @@ function Expenses() {
                   <TableCell>{expense.id}</TableCell>
                   <TableCell>{expense.title}</TableCell>
                   <TableCell>{expense.amount}</TableCell>
+                  <TableCell>{formatHumanFriendlyDate(expense.date)}</TableCell>
                 </TableRow>
               ))}
         </TableBody>
