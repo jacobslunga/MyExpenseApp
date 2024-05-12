@@ -3,11 +3,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { toast } from "sonner";
 
 import { zodValidator } from "@tanstack/zod-form-adapter";
 
 import { useForm } from "@tanstack/react-form";
-import { api } from "@/lib/api";
+import { createExpense, loadingCreateExpenseQueryOptions } from "@/lib/api";
+import { getAllExpensesQueryOptions } from "@/lib/api";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { createExpenseSchema } from "@server/sharedTypes";
 
@@ -16,6 +19,7 @@ export const Route = createFileRoute("/_authenticated/create-expense")({
 });
 
 function CreateExpense() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const form = useForm({
@@ -26,11 +30,32 @@ function CreateExpense() {
       date: new Date().toISOString(),
     },
     onSubmit: async ({ value }) => {
-      const res = await api.expenses.$post({ json: value });
-      if (!res.ok) {
-        throw new Error("Failed to create expense");
-      }
       navigate({ to: "/expenses" });
+
+      queryClient.setQueryData(loadingCreateExpenseQueryOptions.queryKey, {
+        expense: value,
+      });
+
+      try {
+        const newExpense = await createExpense({ value });
+
+        const existingExpenses = await queryClient.ensureQueryData(
+          getAllExpensesQueryOptions
+        );
+        queryClient.setQueryData(getAllExpensesQueryOptions.queryKey, [
+          ...existingExpenses,
+          newExpense,
+        ]);
+        toast("Expense created", {
+          description: `You spent $${newExpense.amount} on ${newExpense.title} on ${new Date(newExpense.date).toLocaleDateString()}`,
+        });
+      } catch (error) {
+        toast("Expense failed to be created", {
+          description: "Please try again later.",
+        });
+      } finally {
+        queryClient.setQueryData(loadingCreateExpenseQueryOptions.queryKey, {});
+      }
     },
   });
 

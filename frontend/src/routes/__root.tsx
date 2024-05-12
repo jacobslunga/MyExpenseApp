@@ -5,6 +5,7 @@ import {
   Outlet,
   useLocation,
 } from "@tanstack/react-router";
+import { Toaster } from "@/components/ui/sonner";
 
 interface RouterContext {
   queryClient: QueryClient;
@@ -61,6 +62,7 @@ function Root() {
         <Outlet />
       </div>
       {/* <TanStackRouterDevtools /> */}
+      <Toaster />
     </>
   );
 }

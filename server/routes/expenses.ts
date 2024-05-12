@@ -34,10 +34,11 @@ export const expensesRoute = new Hono()
     const newExpense = await db
       .insert(expensesTable)
       .values(validatedExpense)
-      .returning();
+      .returning()
+      .then((d) => d[0]);
 
     c.status(201);
-    return c.json({ newExpense });
+    return c.json(newExpense);
   })
   .get("/total-spent", getUser, async (c) => {
     const user = c.var.user;
