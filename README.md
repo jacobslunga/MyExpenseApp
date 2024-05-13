@@ -1,15 +1,15 @@
-# bun-app
+# Expense App
 
-To install dependencies:
+This is a simple expense app, mostly showing a cool tech stack
 
-```bash
-bun install
-```
+## Tech Stack
 
-To run:
+**Client:** React, TanStack, Shadcn,
 
-```bash
-bun run index.ts
-```
+**Server:** Bun, Hono, Zod, Drizzle, TypeScript (of course)
 
-This project was created using `bun init` in bun v1.0.28. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+## Screenshots
+
+[![Screenshot-2024-05-13-at-14-43-28.png](https://i.postimg.cc/Xv7bW2kM/Screenshot-2024-05-13-at-14-43-28.png)](https://postimg.cc/CRttHs2J)
+
+[![home.png](https://i.postimg.cc/rsh4hZj8/home.png)](https://postimg.cc/kRbDGcLZ)
